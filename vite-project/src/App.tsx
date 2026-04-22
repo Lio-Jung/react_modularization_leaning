@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import Roll from "./components/Roll";
 import History from "./components/History";
 import Settings from "./components/Settings";
+import { saveHistoryToLocalStorage, loadHistoryFromLocalStorage } from "./services/storage";
+import { fetchPokemons } from "./services/api";
 
 function App() {
   const [pokemon, setPokemon] = useState("");
-  const [history, setHistory] = useState<string[]>(() => {
-    const saved = localStorage.getItem("savedHistory");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [history, setHistory] = useState<string[]>(loadHistoryFromLocalStorage());
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -16,28 +15,19 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [limit, setLimit] = useState(20);
 
-  // history 저장
+  // history save
   useEffect(() => {
-    localStorage.setItem("savedHistory", JSON.stringify(history));
+    saveHistoryToLocalStorage(history);
   }, [history]);
 
-  // Pokémon 가져오기
+  // Pokémon load
   const rollPokemon = async () => {
     setLoading(true);
     setError("");
 
-    try {
-      const res = await fetch(
-        `https://pokeapi.co/api/v2/pokemon?limit=${limit}`
-      );
+    try {      
+      const list = await fetchPokemons(limit);
 
-      if (!res.ok) {
-        throw new Error("API error");
-      }
-
-      const data = await res.json();
-
-      const list = data.results;
       const randomIndex = Math.floor(Math.random() * list.length);
       const selected = list[randomIndex];
 
@@ -50,24 +40,19 @@ function App() {
     }
   };
 
-  const clearHistory = () => {
-    setHistory([]);
-    setPokemon("");
-  };
-
   return (
     <div>
       <h1>Pokémon Roller</h1>
 
-      {/* 결과 / 로딩 / 에러 */}
+      {/* show */}
       <Roll loading={loading} error={error} pokemon={pokemon} onRoll={rollPokemon}/>      
 
-      {/* Settings 버튼 */}
+      {/* Settings */}
       <Settings isSettingsOpen={isSettingsOpen} limit={limit} setLimit={setLimit} setIsSettingsOpen={setIsSettingsOpen} />
       
-
+      {/* history */}
       {history.length > 0 && !isSettingsOpen && (
-      <History history={history} onClear={clearHistory}/>
+      <History history={history} setHistory={setHistory} setPokemon={setPokemon}/>
       )}
     </div>
   );

@@ -5,7 +5,6 @@ type Props = {
         limit : number;
         setLimit : React.Dispatch<React.SetStateAction<number>>;
         setIsSettingsOpen : React.Dispatch<React.SetStateAction<boolean>>;
-
 }
 
 export default function Settings({ isSettingsOpen, limit, setLimit, setIsSettingsOpen }: Props) {
@@ -24,7 +23,7 @@ export default function Settings({ isSettingsOpen, limit, setLimit, setIsSetting
       {/* Settings 화면 */}
       {isSettingsOpen && (
         <div>
-          <p>Load Pokémon up to:</p>
+          <span>Load Pokémon up to#</span>
           <input
             ref={inputref}
             type="number"
