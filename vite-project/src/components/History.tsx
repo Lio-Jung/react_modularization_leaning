@@ -1,13 +1,9 @@
 type Props = {
     history : string[];
-    setHistory : React.Dispatch<React.SetStateAction<string[]>>;
-    setPokemon : React.Dispatch<React.SetStateAction<string>>;
+    clearHistory : () => void;
 }
-export default function History({history, setHistory, setPokemon}:Props) {
-    const clearHistory = () => {
-    setHistory([]);
-    setPokemon("");
-  };
+export default function History({history, clearHistory}:Props) {
+
     return(    
         <div>
           <p>{history.join(", ")}</p>
