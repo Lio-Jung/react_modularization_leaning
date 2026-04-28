@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 type Props = {
         isSettingsOpen : boolean;
         limit : number;
-        setLimit : React.Dispatch<React.SetStateAction<number>>;
-        setIsSettingsOpen : React.Dispatch<React.SetStateAction<boolean>>;
+        changeLimit : (value:number) => void;
+        toggleSettings : () => void;
+        closeSettings : () => void;
 }
 
-export default function Settings({ isSettingsOpen, limit, setLimit, setIsSettingsOpen }: Props) {
+export default function Settings({ isSettingsOpen, limit, changeLimit, toggleSettings, closeSettings }: Props) {
     const inputref = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -18,9 +19,9 @@ export default function Settings({ isSettingsOpen, limit, setLimit, setIsSetting
 
     return (
         <div>
-        <button onClick={() => setIsSettingsOpen((prev) => !prev)}>Settings</button>
+        <button onClick={toggleSettings}>Settings</button>
 
-      {/* Settings 화면 */}
+      {/* Settings */}
       {isSettingsOpen && (
         <div>
           <span>Load Pokémon up to#</span>
@@ -28,14 +29,14 @@ export default function Settings({ isSettingsOpen, limit, setLimit, setIsSetting
             ref={inputref}
             type="number"
             value={limit}
-            onChange={(e) => setLimit(Number(e.target.value))}
+            onChange={(e) => changeLimit(Number(e.target.value))}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                    setIsSettingsOpen(false);
+                    closeSettings();
                 }
             }}
           />
-          <button onClick={() => setIsSettingsOpen(false)}>Save</button>
+          <button onClick={closeSettings}>Save</button>
         </div>
         )}
         </div>
