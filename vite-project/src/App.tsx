@@ -1,14 +1,19 @@
-import { useState} from "react";
 import Roll from "./components/Roll";
 import History from "./components/History";
 import Settings from "./components/Settings";
 import { usePokemon } from "./hooks/usePokemon";
+import { useSettings } from "./hooks/useSettings";
 function App() {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [limit, setLimit] = useState(20);
+  //Hooks
+  const {
+    isSettingsOpen, 
+    limit,  
+    toggleSettings, 
+    closeSettings,
+    changeLimit
+  } = useSettings();
 
-  //Hook
-  const { 
+  const {
     pokemon, 
     history, 
     loading, 
@@ -33,8 +38,9 @@ function App() {
       <Settings 
         isSettingsOpen={isSettingsOpen} 
         limit={limit} 
-        setLimit={setLimit} 
-        setIsSettingsOpen={setIsSettingsOpen} 
+        changeLimit={changeLimit} 
+        toggleSettings={toggleSettings} 
+        closeSettings = {closeSettings}
       />
       
       {/* history */}
